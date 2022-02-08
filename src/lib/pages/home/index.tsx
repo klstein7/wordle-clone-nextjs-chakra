@@ -1,26 +1,32 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Button, Stack } from "@chakra-ui/react";
 
-import CTASection from "lib/components/samples/CTASection";
-import SomeImage from "lib/components/samples/SomeImage";
-import SomeText from "lib/components/samples/SomeText";
+import WordRow from "lib/components/board/WordRow";
+import useAnswer from "lib/store/answer";
+import useGuesses from "lib/store/guesses";
+import useLetters from "lib/store/letters";
 
 const Home = () => {
-  return (
-    <Box
-      display={{ md: "flex" }}
-      alignItems="center"
-      minHeight="70vh"
-      gap={8}
-      mb={8}
-      w="full"
-    >
-      <SomeImage />
+  const { letters, resetLetters, setFocusedIndex } = useLetters();
+  const { addGuess, guesses } = useGuesses();
 
-      <Box>
-        <SomeText />
-        <CTASection />
-      </Box>
-    </Box>
+  return (
+    <Stack direction="column" spacing="5">
+      {guesses.map((guess, index) => (
+        <WordRow key={`guess-${index}`} guess={guess} />
+      ))}
+      <WordRow />
+      <Button
+        variant="outline"
+        onClick={() => {
+          const savedLetters = letters;
+          addGuess({ letters: savedLetters });
+          resetLetters();
+          setFocusedIndex(0);
+        }}
+      >
+        Check
+      </Button>
+    </Stack>
   );
 };
 

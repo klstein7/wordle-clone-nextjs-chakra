@@ -5,6 +5,9 @@ import Button from "./components/button";
 import fonts from "./fonts";
 
 const customTheme = extendTheme({
+  config: {
+    initialColorMode: "dark",
+  },
   fonts,
   colors,
   components: {
