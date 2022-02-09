@@ -1,13 +1,11 @@
 import { Box, Button, Stack } from "@chakra-ui/react";
 
 import WordRow from "lib/components/board/WordRow";
-import useAnswer from "lib/store/answer";
-import useGuesses from "lib/store/guesses";
-import useLetters from "lib/store/letters";
+import useStore from "lib/store/useStore";
 
 const Home = () => {
-  const { letters, resetLetters, setFocusedIndex } = useLetters();
-  const { addGuess, guesses } = useGuesses();
+  const { letters, resetLetters, setFocusedIndex } = useStore();
+  const { addGuess, guesses } = useStore();
 
   return (
     <Stack direction="column" spacing="5">
@@ -18,10 +16,7 @@ const Home = () => {
       <Button
         variant="outline"
         onClick={() => {
-          const savedLetters = letters;
-          addGuess({ letters: savedLetters });
-          resetLetters();
-          setFocusedIndex(0);
+          addGuess();
         }}
       >
         Check

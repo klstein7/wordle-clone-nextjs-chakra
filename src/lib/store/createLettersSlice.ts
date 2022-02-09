@@ -1,6 +1,8 @@
-import create from "zustand";
+import type { GetState, SetState } from "zustand";
 
-type LettersState = {
+import type { StoreState } from "./useStore";
+
+export type LettersState = {
   letters: string[];
   focusedIndex: number;
   getLetterForIndex: (index: number) => string;
@@ -9,11 +11,14 @@ type LettersState = {
   resetLetters: () => void;
 };
 
-const useLetters = create<LettersState>((set, get) => ({
+const createLettersSlice = (
+  set: SetState<StoreState>,
+  get: GetState<StoreState>
+) => ({
   letters: ["", "", "", "", "", ""],
   focusedIndex: 0,
   getLetterForIndex: (index: number) => get().letters[index],
-  setLetterForIndex: (letter, index) =>
+  setLetterForIndex: (letter: string, index: number) =>
     set((state) => ({
       ...state,
       letters: [
@@ -26,6 +31,6 @@ const useLetters = create<LettersState>((set, get) => ({
     set((state) => ({ ...state, focusedIndex: index })),
   resetLetters: () =>
     set((state) => ({ ...state, letters: ["", "", "", "", "", ""] })),
-}));
+});
 
-export default useLetters;
+export default createLettersSlice;

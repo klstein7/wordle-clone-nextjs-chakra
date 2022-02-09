@@ -1,17 +1,16 @@
 import { Box, Flex, Input, SimpleGrid, Text } from "@chakra-ui/react";
 import { useMemo } from "react";
 
-import useAnswer from "lib/store/answer";
-
 import Letter from "./Letter";
-import { Guess } from "lib/store/guesses";
+import { Guess } from "lib/store/createGuessesSlice";
+import useStore from "lib/store/useStore";
 
 type WordRowProps = {
   guess?: Guess;
 };
 
 const WordRow = ({ guess = undefined }: WordRowProps) => {
-  const { answer } = useAnswer();
+  const { answer } = useStore();
   console.log(guess);
   return (
     <SimpleGrid columns={6} spacing="3">
@@ -21,7 +20,7 @@ const WordRow = ({ guess = undefined }: WordRowProps) => {
           key={`letter-${index}`}
           index={index}
           row={0}
-          letter={guess?.letters[index]}
+          guessResult={guess?.value[index]}
         />
       ))}
     </SimpleGrid>

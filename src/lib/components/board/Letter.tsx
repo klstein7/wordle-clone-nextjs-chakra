@@ -2,28 +2,24 @@ import { Flex, Input } from "@chakra-ui/react";
 import { useMemo } from "react";
 import FocusLock from "react-focus-lock";
 
-import useAnswer from "lib/store/answer";
-import useGuesses from "lib/store/guesses";
-import useLetters from "lib/store/letters";
+import useStore from "lib/store/useStore";
+import { GuessResult } from "lib/store/createGuessesSlice";
 
 type LetterProps = {
   index: number;
   row: number;
-  letter?: string;
+  guessResult?: GuessResult | undefined;
 };
 
-const Letter = ({ index, row, letter = undefined }: LetterProps) => {
+const Letter = ({ index, row, guessResult = undefined }: LetterProps) => {
   const {
     letters,
     setLetterForIndex,
     getLetterForIndex,
     setFocusedIndex,
     focusedIndex,
-  } = useLetters();
-
-  const { answer } = useAnswer();
-
-  const { checkGuess } = useGuesses();
+    addGuess,
+  } = useStore();
 
   const isLetter = (str: string | undefined) => {
     if (!str) {
@@ -33,27 +29,27 @@ const Letter = ({ index, row, letter = undefined }: LetterProps) => {
   };
 
   const isFocused = () => {
-    if (letter) {
+    if (guessResult) {
       return false;
     }
     return focusedIndex === index;
   };
 
   const backgroundColor = useMemo(() => {
-    if (!letter) {
+    if (!guessResult) {
       return undefined;
     }
 
-    if (letter === answer[index]) {
+    if (guessResult.result === "correct") {
       return "green.700";
     }
 
-    if (answer.includes(letter)) {
+    if (guessResult.result === "includes") {
       return "yellow.600";
     }
 
     return "red.700";
-  }, [answer, index, letter]);
+  }, [guessResult]);
 
   console.log(isFocused());
 
@@ -70,7 +66,7 @@ const Letter = ({ index, row, letter = undefined }: LetterProps) => {
       >
         <Input
           size="lg"
-          value={letter || getLetterForIndex(index)}
+          value={guessResult?.letter || getLetterForIndex(index)}
           w="100%"
           h="100%"
           border="none"
@@ -84,7 +80,7 @@ const Letter = ({ index, row, letter = undefined }: LetterProps) => {
                 setLetterForIndex("", index);
               }
             } else if (e.key === "Enter") {
-              checkGuess({ letters });
+              addGuess();
             }
           }}
           onChange={(e) => {
